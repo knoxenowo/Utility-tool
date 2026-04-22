@@ -1,98 +1,131 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
+import { useTheme } from '../../hooks/useTheme';
+import { TOOLS, ToolCategory } from '../../constants/tools';
+import { spacing, typography } from '../../theme';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const theme = useTheme();
+  const router = useRouter();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  // Group tools by category
+  const categories: ToolCategory[] = ['Quick Utilities', 'Productivity', 'Images', 'Documents', 'Tools'];
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  return (
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <Animated.View style={styles.header} entering={FadeInDown.duration(400)}>
+        <Text style={[styles.greeting, { color: theme.textSecondary }]}>{getGreeting()}</Text>
+        <Text style={[styles.title, { color: theme.textPrimary }]}>What do you need to do?</Text>
+      </Animated.View>
+
+      {categories.map((category, catIndex) => {
+        const categoryTools = TOOLS.filter(t => t.category === category);
+        if (categoryTools.length === 0) return null;
+
+        return (
+          <Animated.View 
+            key={category} 
+            style={styles.categorySection}
+            entering={FadeIn.delay(catIndex * 100).duration(400)}
+          >
+            <Text style={[styles.categoryTitle, { color: theme.textPrimary }]}>{category}</Text>
+            <View style={styles.grid}>
+              {categoryTools.map((tool, toolIndex) => (
+                <AnimatedTouchableOpacity 
+                  key={tool.id} 
+                  entering={FadeInDown.delay((catIndex * 100) + (toolIndex * 50)).duration(400)}
+                  style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
+                  onPress={() => router.push(tool.route as any)}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.iconContainer, { backgroundColor: theme.background }]}>
+                    <Ionicons name={tool.icon} size={24} color={theme.primary} />
+                  </View>
+                  <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{tool.name}</Text>
+                  <Text style={[styles.cardDesc, { color: theme.textSecondary }]} numberOfLines={2}>
+                    {tool.description}
+                  </Text>
+                </AnimatedTouchableOpacity>
+              ))}
+            </View>
+          </Animated.View>
+        );
+      })}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: spacing.l,
+    paddingTop: spacing.l,
+    paddingBottom: spacing.m,
+  },
+  greeting: {
+    fontSize: typography.sizes.m,
+    fontWeight: typography.weights.medium,
+    marginBottom: spacing.xs,
+  },
+  title: {
+    fontSize: typography.sizes.xl,
+    fontWeight: typography.weights.bold,
+  },
+  categorySection: {
+    paddingHorizontal: spacing.l,
+    marginBottom: spacing.l,
+  },
+  categoryTitle: {
+    fontSize: typography.sizes.l,
+    fontWeight: typography.weights.bold,
+    marginBottom: spacing.m,
+  },
+  grid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  card: {
+    width: '48%',
+    borderWidth: 1,
+    borderRadius: 16,
+    padding: spacing.m,
+    marginBottom: spacing.m,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+    marginBottom: spacing.m,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  cardTitle: {
+    fontSize: typography.sizes.m,
+    fontWeight: typography.weights.bold,
+    marginBottom: spacing.xs,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  cardDesc: {
+    fontSize: typography.sizes.xs,
+    lineHeight: 18,
   },
 });
