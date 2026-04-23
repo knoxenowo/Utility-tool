@@ -12,6 +12,8 @@ interface AppState {
   clearRecentTools: () => void;
   exportDirectoryUri: string | null;
   setExportDirectoryUri: (uri: string | null) => void;
+  animationsEnabled: boolean;
+  setAnimationsEnabled: (enabled: boolean) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -27,6 +29,8 @@ export const useAppStore = create<AppState>()(
       clearRecentTools: () => set({ recentTools: [] }),
       exportDirectoryUri: null,
       setExportDirectoryUri: (uri: string | null) => set({ exportDirectoryUri: uri }),
+      animationsEnabled: true,
+      setAnimationsEnabled: (enabled) => set({ animationsEnabled: enabled }),
     }),
     {
       name: 'utility-hub-storage',

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { useTheme } from '../../hooks/useTheme';
+import { useAppStore } from '../../store/useAppStore';
 import { TOOLS, ToolCategory } from '../../constants/tools';
 import { spacing, typography } from '../../theme';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +14,15 @@ const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpaci
 export default function HomeScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const animationsEnabled = useAppStore(state => state.animationsEnabled);
+  const [focusKey, setFocusKey] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      setFocusKey(prev => prev + 1);
+    }, [])
+  );
+
 
   // Group tools by category
   const categories: ToolCategory[] = ['Quick Utilities', 'Productivity', 'Images', 'Documents', 'Tools'];
@@ -24,8 +35,8 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Animated.View style={styles.header} entering={FadeInDown.duration(400)}>
+    <ScrollView key={focusKey} style={[styles.container, { backgroundColor: theme.background }]}>
+      <Animated.View style={styles.header} entering={animationsEnabled ? FadeInDown.duration(400) : undefined}>
         <Text style={[styles.greeting, { color: theme.textSecondary }]}>{getGreeting()}</Text>
         <Text style={[styles.title, { color: theme.textPrimary }]}>What do you need to do?</Text>
       </Animated.View>
@@ -38,14 +49,14 @@ export default function HomeScreen() {
           <Animated.View 
             key={category} 
             style={styles.categorySection}
-            entering={FadeIn.delay(catIndex * 100).duration(400)}
+            entering={animationsEnabled ? FadeIn.delay(catIndex * 100).duration(400) : undefined}
           >
             <Text style={[styles.categoryTitle, { color: theme.textPrimary }]}>{category}</Text>
             <View style={styles.grid}>
               {categoryTools.map((tool, toolIndex) => (
                 <AnimatedTouchableOpacity 
                   key={tool.id} 
-                  entering={FadeInDown.delay((catIndex * 100) + (toolIndex * 50)).duration(400)}
+                  entering={animationsEnabled ? FadeInDown.delay((catIndex * 100) + (toolIndex * 50)).duration(400) : undefined}
                   style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
                   onPress={() => router.push(tool.route as any)}
                   activeOpacity={0.7}

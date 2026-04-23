@@ -9,6 +9,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        unmountOnBlur: true,
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {

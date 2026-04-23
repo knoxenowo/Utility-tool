@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Switch } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../hooks/useTheme';
@@ -10,7 +11,15 @@ import { Ionicons } from '@expo/vector-icons';
 export default function SettingsScreen() {
   const theme = useTheme();
   const router = useRouter();
-  const { themeMode, setThemeMode } = useAppStore();
+  const { themeMode, setThemeMode, animationsEnabled, setAnimationsEnabled } = useAppStore();
+  const [focusKey, setFocusKey] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      setFocusKey(prev => prev + 1);
+    }, [])
+  );
+
 
   const handleThemeChange = () => {
     if (themeMode === 'light') setThemeMode('dark');
@@ -25,10 +34,10 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View key={focusKey} style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.View 
           style={[styles.section, { backgroundColor: theme.surface, borderColor: theme.border }]}
-        entering={FadeInDown.delay(100).duration(400)}
+        entering={animationsEnabled ? FadeInDown.delay(100).duration(400) : undefined}
       >
         <View style={styles.row}>
           <View style={styles.rowLeft}>
@@ -40,11 +49,24 @@ export default function SettingsScreen() {
             <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
         </View>
+        <View style={[styles.divider, { backgroundColor: theme.border }]} />
+        <View style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="color-wand-outline" size={24} color={theme.primary} />
+            <Text style={[styles.label, { color: theme.textPrimary }]}>Animations</Text>
+          </View>
+          <Switch 
+            value={animationsEnabled} 
+            onValueChange={setAnimationsEnabled}
+            trackColor={{ false: theme.border, true: theme.primary }}
+            thumbColor={'#ffffff'}
+          />
+        </View>
       </Animated.View>
 
       <Animated.View 
         style={[styles.section, { backgroundColor: theme.surface, borderColor: theme.border, marginTop: spacing.l }]}
-        entering={FadeInDown.delay(150).duration(400)}
+        entering={animationsEnabled ? FadeInDown.delay(150).duration(400) : undefined}
       >
         <TouchableOpacity 
           style={styles.row}
@@ -71,7 +93,7 @@ export default function SettingsScreen() {
       
       <Animated.Text 
         style={[styles.footer, { color: theme.textSecondary }]}
-        entering={FadeInDown.delay(200).duration(400)}
+        entering={animationsEnabled ? FadeInDown.delay(200).duration(400) : undefined}
       >
         Utility Hub v1.0.0{'\n'}100% Free & Open
       </Animated.Text>
