@@ -61,6 +61,14 @@ export const TOOLS: Tool[] = [
     route: '/document/image-to-pdf',
   },
   {
+    id: 'compress-pdf',
+    name: 'Compress PDF',
+    description: 'Reduce PDF file size',
+    icon: 'archive-outline',
+    category: 'Documents',
+    route: '/document/compress-pdf',
+  },
+  {
     id: 'document-scanner',
     name: 'Document Scanner',
     description: 'Scan and crop real documents',

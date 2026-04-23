@@ -1,6 +1,6 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
-import { Platform, Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { useAppStore } from '../store/useAppStore';
 
 export const shareFile = async (uri: string, mimeType: string, dialogTitle: string) => {
@@ -41,13 +41,15 @@ export const saveToDevice = async (uri: string, filename: string, mimeType: stri
         'Due to Android security, you cannot select the root Downloads folder directly. Please CREATE a new folder (e.g., "Utility Hub") and select it.',
         [
           { text: 'Cancel', style: 'cancel' },
-          { text: 'Select Folder', onPress: async () => {
+          {
+            text: 'Select Folder', onPress: async () => {
               const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
               if (permissions.granted) {
                 setExportDirectoryUri(permissions.directoryUri);
                 await processAndroidSave(uri, filename, mimeType, category, permissions.directoryUri);
               }
-          }}
+            }
+          }
         ]
       );
     } else {
@@ -62,7 +64,7 @@ export const saveToDevice = async (uri: string, filename: string, mimeType: stri
 const processAndroidSave = async (uri: string, filename: string, mimeType: string, category: string, rootUri: string) => {
   try {
     const { StorageAccessFramework } = FileSystem;
-    
+
     // Ensure Category folder exists inside the chosen root folder
     let categoryUri = '';
     const rootFiles = await StorageAccessFramework.readDirectoryAsync(rootUri);
@@ -74,9 +76,17 @@ const processAndroidSave = async (uri: string, filename: string, mimeType: strin
       categoryUri = await StorageAccessFramework.makeDirectoryAsync(rootUri, category);
     }
 
-    // Create final file
-    const newFileUri = await StorageAccessFramework.createFileAsync(categoryUri, filename, mimeType);
-    
+    // Format the filename with prefix
+    const prefix = category.replace(/ /g, '_');
+
+    // Ensure no double extension if we passed one, but we'll just prepend the prefix
+    // Also remove Date.now() pattern if it sneaked in:
+    let cleanFilename = filename.replace(/_[0-9]{13}/, '');
+    let formattedFilename = `${prefix}_${cleanFilename}`;
+
+    // Create final file. Android SAF will automatically append (1), (2) if it already exists.
+    const newFileUri = await StorageAccessFramework.createFileAsync(categoryUri, formattedFilename, mimeType);
+
     // Copy data
     const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
     await FileSystem.writeAsStringAsync(newFileUri, base64, { encoding: 'base64' });

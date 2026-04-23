@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, Image, ActivityIndicator, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Stack } from 'expo-router';
-import * as ImagePicker from 'expo-image-picker';
-import { useTheme } from '../../hooks/useTheme';
-import { spacing, typography } from '../../theme';
-import { shareFile, saveToDevice } from '../../utils/exportManager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
+import * as ImagePicker from 'expo-image-picker';
+import { Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '../../hooks/useTheme';
+import { spacing, typography } from '../../theme';
+import { saveToDevice, shareFile } from '../../utils/exportManager';
 
 export default function BgEraserScreen() {
   const theme = useTheme();
-  
+
   const [apiKey, setApiKey] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [resultUri, setResultUri] = useState<string | null>(null);
@@ -79,7 +79,7 @@ export default function BgEraserScreen() {
       }
 
       const data = await response.json();
-      
+
       // Remove.bg returns base64 image data in data.data.result_b64
       if (data.data && data.data.result_b64) {
         // Save to temp file so we can view/share it cleanly natively
@@ -87,7 +87,7 @@ export default function BgEraserScreen() {
         await FileSystem.writeAsStringAsync(tempPath, data.data.result_b64, {
           encoding: 'base64',
         });
-        
+
         setResultUri(tempPath);
       } else {
         throw new Error('Invalid response from server');
@@ -119,7 +119,7 @@ export default function BgEraserScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ 
+      <Stack.Screen options={{
         title: 'Background Eraser',
         headerStyle: { backgroundColor: theme.background },
         headerTintColor: theme.textPrimary,
@@ -130,12 +130,12 @@ export default function BgEraserScreen() {
           </TouchableOpacity>
         )
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
+      <KeyboardAvoidingView
+        style={[styles.container, { backgroundColor: theme.background }]}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          
+
           {showApiSettings && (
             <View style={[styles.apiCard, { backgroundColor: theme.surface, borderColor: theme.primary }]}>
               <View style={styles.apiHeader}>
@@ -146,7 +146,7 @@ export default function BgEraserScreen() {
                 Background removal requires a massive AI model. To run this app entirely on your phone without downloading huge files, we securely connect to the Remove.bg AI endpoint.
               </Text>
               <Text style={[styles.apiSub, { color: theme.textSecondary, marginBottom: spacing.m }]}>
-                Get your 100% free API key at <Text style={{fontWeight: 'bold', color: theme.primary}}>remove.bg/api</Text>
+                Get your 100% free API key at <Text style={{ fontWeight: 'bold', color: theme.primary }}>remove.bg/api</Text>
               </Text>
               <TextInput
                 style={[styles.input, { color: theme.textPrimary, borderColor: theme.border, backgroundColor: theme.background }]}
@@ -158,7 +158,7 @@ export default function BgEraserScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
               />
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.saveBtn, { backgroundColor: theme.primary }]}
                 onPress={() => saveApiKey(apiKey)}
               >
@@ -168,15 +168,15 @@ export default function BgEraserScreen() {
           )}
 
           {/* Image Area */}
-          <TouchableOpacity 
-            style={[styles.imagePicker, { borderColor: theme.border, backgroundColor: theme.surface }]} 
+          <TouchableOpacity
+            style={[styles.imagePicker, { borderColor: theme.border, backgroundColor: theme.surface }]}
             onPress={pickImage}
             disabled={isProcessing || (!apiKey && !showApiSettings)}
           >
             {resultUri ? (
               // Grey background to easily spot transparency lines
               <View style={[styles.checkeredBg, { backgroundColor: '#E5E5EA' }]}>
-                 <Image source={{ uri: resultUri }} style={styles.previewImage} resizeMode="contain" />
+                <Image source={{ uri: resultUri }} style={styles.previewImage} resizeMode="contain" />
               </View>
             ) : imageUri ? (
               <Image source={{ uri: imageUri }} style={styles.previewImage} resizeMode="contain" />
@@ -188,7 +188,7 @@ export default function BgEraserScreen() {
                 </Text>
               </View>
             )}
-            
+
             {isProcessing && (
               <View style={[styles.loadingOverlay, { backgroundColor: 'rgba(0,0,0,0.6)' }]}>
                 <ActivityIndicator size="large" color="#FFF" />
@@ -200,7 +200,7 @@ export default function BgEraserScreen() {
           {/* Export Actions */}
           {resultUri && (
             <View style={styles.actionRowGrid}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.primaryActionBtn, { backgroundColor: theme.primary }]}
                 onPress={() => exportResult('share')}
                 disabled={isProcessing}
@@ -208,8 +208,8 @@ export default function BgEraserScreen() {
                 <Ionicons name="share-outline" size={20} color={theme.background} />
                 <Text style={{ color: theme.background, fontWeight: 'bold' }}>Share PNG</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={[styles.primaryActionBtn, { backgroundColor: theme.primary }]}
                 onPress={() => exportResult('save')}
                 disabled={isProcessing}
