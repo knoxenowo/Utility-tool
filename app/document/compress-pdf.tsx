@@ -166,7 +166,7 @@ export default function CompressPDFScreen() {
               style={[styles.input, { color: theme.textPrimary, borderColor: theme.border }]}
               placeholder="Enter ConvertAPI Secret Key"
               placeholderTextColor={theme.textSecondary}
-              value={convertApiKey}
+              value={convertApiKey || ''}
               onChangeText={setConvertApiKey}
               secureTextEntry
             />

@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { Keyboard, Platform, ScrollView, ScrollViewProps, TextInput, findNodeHandle } from 'react-native';
+import { Keyboard, Platform, ScrollView, ScrollViewProps, TextInput, findNodeHandle, UIManager } from 'react-native';
 
 interface KeyboardAwareScrollViewProps extends ScrollViewProps {
   children: ReactNode;
@@ -32,12 +32,9 @@ export default function KeyboardAwareScrollView({
       const focusedInput = TextInput.State.currentlyFocusedInput?.();
       if (!focusedInput || !scrollRef.current) return;
 
-      const inputNodeHandle = findNodeHandle(focusedInput);
+      const inputNodeHandle = findNodeHandle(focusedInput as any);
       const scrollNodeHandle = findNodeHandle(scrollRef.current);
       if (!inputNodeHandle || !scrollNodeHandle) return;
-
-      // Import UIManager dynamically
-      const { UIManager } = require('react-native');
 
       // Measure the focused input relative to the ScrollView
       UIManager.measureLayout(

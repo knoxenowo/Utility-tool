@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
@@ -50,6 +50,9 @@ export default function UnitConverterScreen() {
   const [inputValue, setInputValue] = useState('1');
   const [result, setResult] = useState('');
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activeSelector, setActiveSelector] = useState<'from' | 'to' | null>(null);
+
   // When category changes, reset units
   useEffect(() => {
     const units = Object.keys(CONVERSIONS[category]);
@@ -95,36 +98,63 @@ export default function UnitConverterScreen() {
     setToUnit(temp);
   };
 
-  const renderUnitSelector = (currentUnit: string, setUnit: (u: string) => void) => {
+  const openDropdown = (type: 'from' | 'to') => {
+    setActiveSelector(type);
+    setModalVisible(true);
+  };
+
+  const selectUnit = (unit: string) => {
+    if (activeSelector === 'from') setFromUnit(unit);
+    else if (activeSelector === 'to') setToUnit(unit);
+    setModalVisible(false);
+  };
+
+  const renderUnitDropdownButton = (currentUnit: string, type: 'from' | 'to') => {
+    return (
+      <TouchableOpacity 
+        style={[styles.dropdownBtn, { backgroundColor: theme.surface, borderColor: theme.border }]} 
+        onPress={() => openDropdown(type)}
+      >
+        <Text style={{ color: theme.textPrimary, fontSize: typography.sizes.m, fontWeight: 'bold' }}>{currentUnit}</Text>
+        <Ionicons name="chevron-down" size={20} color={theme.textSecondary} />
+      </TouchableOpacity>
+    );
+  };
+
+  const renderModal = () => {
     const units = Object.keys(CONVERSIONS[category]);
     return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.unitScroll}>
-        <View style={styles.unitRow}>
-          {units.map((u) => {
-            const isSelected = currentUnit === u;
-            return (
-              <TouchableOpacity
-                key={u}
-                style={[
-                  styles.unitChip, 
-                  { 
-                    backgroundColor: isSelected ? theme.primary : theme.surface,
-                    borderColor: isSelected ? theme.primary : theme.border 
-                  }
-                ]}
-                onPress={() => setUnit(u)}
-              >
-                <Text style={{ 
-                  color: isSelected ? theme.background : theme.textSecondary,
-                  fontWeight: isSelected ? 'bold' : 'normal'
-                }}>
-                  {u}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </ScrollView>
+      <Modal visible={modalVisible} transparent animationType="fade">
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setModalVisible(false)}>
+          <View style={[styles.modalContent, { backgroundColor: theme.surface, borderColor: theme.border }]} onStartShouldSetResponder={() => true}>
+            <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>Select Unit</Text>
+            <ScrollView style={{ maxHeight: 300, width: '100%' }}>
+              {units.map((u) => {
+                const isSelected = activeSelector === 'from' ? fromUnit === u : toUnit === u;
+                return (
+                  <TouchableOpacity
+                    key={u}
+                    style={[
+                      styles.modalOption,
+                      { backgroundColor: isSelected ? theme.primary + '15' : 'transparent' }
+                    ]}
+                    onPress={() => selectUnit(u)}
+                  >
+                    <Text style={{ 
+                      color: isSelected ? theme.primary : theme.textPrimary,
+                      fontWeight: isSelected ? 'bold' : 'normal',
+                      fontSize: typography.sizes.m
+                    }}>
+                      {u}
+                    </Text>
+                    {isSelected && <Ionicons name="checkmark" size={20} color={theme.primary} />}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     );
   };
 
@@ -174,7 +204,7 @@ export default function UnitConverterScreen() {
                 keyboardType="numeric"
                 returnKeyType="done"
               />
-              {renderUnitSelector(fromUnit, setFromUnit)}
+              {renderUnitDropdownButton(fromUnit, 'from')}
             </View>
 
             <View style={styles.swapWrapper}>
@@ -190,10 +220,11 @@ export default function UnitConverterScreen() {
               <Text style={[styles.largeOutput, { color: theme.primary, borderBottomColor: theme.border }]}>
                 {result || '0'}
               </Text>
-              {renderUnitSelector(toUnit, setToUnit)}
+              {renderUnitDropdownButton(toUnit, 'to')}
             </View>
 
           </View>
+          {renderModal()}
       </KeyboardAwareScrollView>
     </>
   );
@@ -248,19 +279,43 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: spacing.m,
   },
-  unitScroll: {
-    flexGrow: 0,
-  },
-  unitRow: {
+  dropdownBtn: {
     flexDirection: 'row',
-    gap: spacing.s,
-    paddingBottom: spacing.s,
-  },
-  unitChip: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.m,
-    paddingVertical: spacing.s,
-    borderRadius: 20,
+    paddingVertical: spacing.s + 4,
+    borderRadius: 12,
     borderWidth: 1,
+    marginTop: spacing.xs,
+    width: 160,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: spacing.l,
+    borderTopWidth: 1,
+    maxHeight: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: typography.sizes.l,
+    fontWeight: typography.weights.bold,
+    marginBottom: spacing.l,
+  },
+  modalOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.m,
+    paddingHorizontal: spacing.m,
+    borderRadius: 12,
+    marginBottom: spacing.xs,
   },
   swapWrapper: {
     flexDirection: 'row',

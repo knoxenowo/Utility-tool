@@ -35,7 +35,7 @@ export default function DailyPlannerScreen() {
           
           <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <View style={[styles.header, { borderBottomColor: theme.border }]}>
-              <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>Today's Schedule</Text>
+              <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>Today&apos;s Schedule</Text>
               <Text style={[styles.headerSub, { color: theme.textSecondary }]}>
                 {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
               </Text>

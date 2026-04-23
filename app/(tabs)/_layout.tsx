@@ -9,7 +9,6 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        unmountOnBlur: true,
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
@@ -25,8 +24,8 @@ export default function TabLayout() {
           color: theme.textPrimary,
         },
         headerShadowVisible: false,
+        sceneStyle: { backgroundColor: theme.background },
       }}
-      sceneContainerStyle={{ backgroundColor: theme.background }}
     >
       <Tabs.Screen
         name="index"
