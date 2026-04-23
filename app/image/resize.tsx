@@ -3,7 +3,8 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack } from 'expo-router';
 import React, { useState } from 'react';
-import { Image as RNImage, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image as RNImage, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { useTheme } from '../../hooks/useTheme';
 import { spacing, typography } from '../../theme';
 import { saveToDevice, shareFile } from '../../utils/exportManager';
@@ -135,8 +136,8 @@ export default function ImageResizeScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
-        <View style={styles.content}>
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+          <View style={styles.content}>
 
           {!originalImage ? (
             <View style={[styles.placeholder, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -238,8 +239,8 @@ export default function ImageResizeScreen() {
             </>
           )}
 
-        </View>
-      </ScrollView>
+          </View>
+      </KeyboardAwareScrollView>
     </>
   );
 }

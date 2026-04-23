@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../hooks/useTheme';
@@ -69,10 +70,7 @@ export default function TodoListScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
         <View style={styles.content}>
           
           <View style={[styles.inputContainer, { borderColor: theme.border, backgroundColor: theme.surface }]}>
@@ -144,7 +142,7 @@ export default function TodoListScreen() {
           )}
 
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

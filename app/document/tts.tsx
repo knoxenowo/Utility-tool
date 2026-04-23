@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import * as Speech from 'expo-speech';
@@ -86,11 +87,7 @@ export default function TTSScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           <View style={[styles.textCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <TextInput
@@ -169,9 +166,7 @@ export default function TTSScreen() {
             </View>
 
           </View>
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

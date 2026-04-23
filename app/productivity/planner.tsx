@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../hooks/useTheme';
@@ -30,12 +31,7 @@ export default function DailyPlannerScreen() {
           </TouchableOpacity>
         )
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <View style={[styles.header, { borderBottomColor: theme.border }]}>
@@ -78,9 +74,7 @@ export default function DailyPlannerScreen() {
               );
             })}
           </View>
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

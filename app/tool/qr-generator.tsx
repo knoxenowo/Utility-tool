@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import QRCode from 'react-native-qrcode-svg';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Ionicons } from '@expo/vector-icons';
@@ -47,11 +48,7 @@ export default function QRGeneratorScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           <Text style={[styles.label, { color: theme.textPrimary }]}>Enter Text or URL</Text>
           <View style={[styles.inputContainer, { borderColor: theme.border, backgroundColor: theme.surface }]}>
@@ -110,9 +107,7 @@ export default function QRGeneratorScreen() {
               <Text style={{ color: theme.background, fontWeight: 'bold' }}>Save to Device</Text>
             </TouchableOpacity>
           </View>
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

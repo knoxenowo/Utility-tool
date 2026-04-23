@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, ActivityIndicator, Modal, FlatList } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Modal, FlatList } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../hooks/useTheme';
@@ -115,11 +116,7 @@ export default function CurrencyConverterScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           <View style={[styles.headerRow, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <View>
@@ -164,9 +161,7 @@ export default function CurrencyConverterScreen() {
             </View>
 
           </View>
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
 
       {/* Currency Selection Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent={true}>

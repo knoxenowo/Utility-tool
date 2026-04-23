@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, Animated } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import Slider from '@react-native-community/slider';
 import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
@@ -90,11 +91,7 @@ export default function ColorPickerScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           <View style={[styles.previewCard, { backgroundColor: currentColorHex, borderColor: theme.border }]} />
 
@@ -196,9 +193,7 @@ export default function ColorPickerScreen() {
             </TouchableOpacity>
 
           </View>
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
 
       <Animated.View style={[styles.toast, { opacity: toastOpacity, backgroundColor: theme.textPrimary }]} pointerEvents="none">
         <Text style={[styles.toastText, { color: theme.background }]}>Copied to clipboard!</Text>

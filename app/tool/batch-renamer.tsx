@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform, ActivityIndicator, Alert } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
@@ -175,11 +176,7 @@ export default function BatchRenamerScreen() {
           </TouchableOpacity>
         ) : null
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           {/* Rules Card */}
           <View style={[styles.rulesCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -308,9 +305,7 @@ export default function BatchRenamerScreen() {
               )}
             </TouchableOpacity>
           )}
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

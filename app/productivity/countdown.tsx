@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, Vibration, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Vibration, Alert } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { createAudioPlayer, setAudioModeAsync, AudioPlayer } from 'expo-audio';
@@ -125,11 +126,7 @@ export default function CountdownScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           <View style={[styles.timerCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             
@@ -199,9 +196,7 @@ export default function CountdownScreen() {
             </View>
 
           </View>
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

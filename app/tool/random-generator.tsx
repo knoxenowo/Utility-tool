@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, Animated, Easing } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../hooks/useTheme';
@@ -77,11 +78,7 @@ export default function RandomGeneratorScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           {/* Mode Selector */}
           <View style={[styles.tabContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -220,8 +217,7 @@ export default function RandomGeneratorScreen() {
             )}
 
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

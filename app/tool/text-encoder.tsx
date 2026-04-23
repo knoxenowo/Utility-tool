@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Animated, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Animated, Platform } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import * as Clipboard from 'expo-clipboard';
@@ -128,12 +129,8 @@ export default function BaseConverterScreen() {
           </TouchableOpacity>
         ) : null
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 80}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <KeyboardAwareScrollView contentContainerStyle={styles.content}>
           
           <Text style={[styles.instructions, { color: theme.textSecondary }]}>
             Type in any box to instantly convert to all other bases. Separate multiple values with spaces.
@@ -147,14 +144,14 @@ export default function BaseConverterScreen() {
             {renderInputCard('oct', 'Octal (Base 8)', 'e.g. 110 151', 'numeric')}
           </View>
 
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         {/* Floating Animated Toast */}
         <Animated.View style={[styles.toast, { opacity: toastOpacity, backgroundColor: theme.textPrimary }]} pointerEvents="none">
           <Ionicons name="checkmark-circle" size={20} color={theme.background} />
           <Text style={[styles.toastText, { color: theme.background }]}>{toastMessage}</Text>
         </Animated.View>
-      </KeyboardAvoidingView>
+      </View>
     </>
   );
 }

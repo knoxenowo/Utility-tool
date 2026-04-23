@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, Alert, BackHandler } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Alert, BackHandler } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../hooks/useTheme';
@@ -147,10 +148,7 @@ export default function NotesScreen() {
           </TouchableOpacity>
         )
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
         <View style={styles.editorContent}>
           <TextInput
             style={[styles.editorTitle, { color: theme.textPrimary }]}
@@ -170,7 +168,7 @@ export default function NotesScreen() {
             autoFocus={!editTitle && !editContent}
           />
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

@@ -4,7 +4,8 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { useTheme } from '../../hooks/useTheme';
 import { spacing, typography } from '../../theme';
 import { saveToDevice, shareFile } from '../../utils/exportManager';
@@ -130,11 +131,7 @@ export default function BgEraserScreen() {
           </TouchableOpacity>
         )
       }} />
-      <KeyboardAvoidingView
-        style={[styles.container, { backgroundColor: theme.background }]}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
 
           {showApiSettings && (
             <View style={[styles.apiCard, { backgroundColor: theme.surface, borderColor: theme.primary }]}>
@@ -219,9 +216,7 @@ export default function BgEraserScreen() {
               </TouchableOpacity>
             </View>
           )}
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

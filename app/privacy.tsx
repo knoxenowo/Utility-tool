@@ -33,7 +33,13 @@ export default function PrivacyPolicyScreen() {
             Certain advanced features require connecting to secure external APIs to function. Specifically:
           </Text>
           <Text style={[styles.bullet, { color: theme.textSecondary }]}>
-            • <Text style={{fontWeight: 'bold'}}>Background Eraser:</Text> Images processed through this tool are temporarily uploaded to the official Remove.bg API for AI processing. Images are not retained by us, but are subject to Remove.bg&apos;s independent privacy policy.
+            • <Text style={{fontWeight: 'bold'}}>Background Eraser:</Text> Images processed through this tool are temporarily uploaded to the official Remove.bg API for AI processing. Images are not retained by us, but are subject to Remove.bg's independent privacy policy.
+          </Text>
+          <Text style={[styles.bullet, { color: theme.textSecondary }]}>
+            • <Text style={{fontWeight: 'bold'}}>PDF Compressor:</Text> Files processed through this tool are transmitted to ConvertAPI.com using your personal API key. Files are deleted from their servers immediately after processing in accordance with their privacy policy.
+          </Text>
+          <Text style={[styles.bullet, { color: theme.textSecondary }]}>
+            • <Text style={{fontWeight: 'bold'}}>Image to Text (OCR):</Text> Images processed for text extraction are sent to the OCR.space API. They do not store any images or extracted text on their servers.
           </Text>
         </View>
 

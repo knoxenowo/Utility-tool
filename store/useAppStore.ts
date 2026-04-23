@@ -14,6 +14,8 @@ interface AppState {
   setExportDirectoryUri: (uri: string | null) => void;
   animationsEnabled: boolean;
   setAnimationsEnabled: (enabled: boolean) => void;
+  convertApiKey: string | null;
+  setConvertApiKey: (key: string | null) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -31,6 +33,8 @@ export const useAppStore = create<AppState>()(
       setExportDirectoryUri: (uri: string | null) => set({ exportDirectoryUri: uri }),
       animationsEnabled: true,
       setAnimationsEnabled: (enabled) => set({ animationsEnabled: enabled }),
+      convertApiKey: null,
+      setConvertApiKey: (key: string | null) => set({ convertApiKey: key }),
     }),
     {
       name: 'utility-hub-storage',

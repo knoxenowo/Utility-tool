@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, ActivityIndicator, Platform, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Platform, TextInput } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Ionicons } from '@expo/vector-icons';
@@ -136,8 +137,8 @@ export default function PassportPhotoScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
-        <View style={styles.content}>
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+          <View style={styles.content}>
           
           {!selectedImage ? (
             <View style={[styles.placeholder, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -310,8 +311,8 @@ export default function PassportPhotoScreen() {
             </TouchableOpacity>
           </View>
 
-        </View>
-      </ScrollView>
+          </View>
+      </KeyboardAwareScrollView>
     </>
   );
 }

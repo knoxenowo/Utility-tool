@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Animated, Platform, KeyboardAvoidingView, Easing, Vibration } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Animated, Easing, Vibration } from 'react-native';
+import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import Svg, { Path, G, Text as SvgText } from 'react-native-svg';
@@ -165,12 +166,7 @@ export default function DecisionWheelScreen() {
         headerTintColor: theme.textPrimary,
         headerShadowVisible: false,
       }} />
-      <KeyboardAvoidingView 
-        style={[styles.container, { backgroundColor: theme.background }]} 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 80}
-      >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           
           {renderWheel()}
 
@@ -216,9 +212,7 @@ export default function DecisionWheelScreen() {
               ))}
             </View>
           </View>
-
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </>
   );
 }
