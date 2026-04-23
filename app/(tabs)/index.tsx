@@ -16,6 +16,20 @@ export default function HomeScreen() {
   const router = useRouter();
   const animationsEnabled = useAppStore(state => state.animationsEnabled);
   const [focusKey, setFocusKey] = useState(0);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    'Quick Utilities': true,
+    'Productivity': true,
+    'Images': true,
+    'Documents': true,
+    'Tools': true,
+  });
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -35,7 +49,11 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView key={focusKey} style={[styles.container, { backgroundColor: theme.background }]}>
+    <ScrollView 
+      key={focusKey} 
+      style={[styles.container, { backgroundColor: theme.background }]}
+      contentContainerStyle={{ paddingBottom: 100 }}
+    >
       <Animated.View style={styles.header} entering={animationsEnabled ? FadeInDown.duration(400) : undefined}>
         <Text style={[styles.greeting, { color: theme.textSecondary }]}>{getGreeting()}</Text>
         <Text style={[styles.title, { color: theme.textPrimary }]}>What do you need to do?</Text>
@@ -51,26 +69,40 @@ export default function HomeScreen() {
             style={styles.categorySection}
             entering={animationsEnabled ? FadeIn.delay(catIndex * 100).duration(400) : undefined}
           >
-            <Text style={[styles.categoryTitle, { color: theme.textPrimary }]}>{category}</Text>
-            <View style={styles.grid}>
-              {categoryTools.map((tool, toolIndex) => (
-                <AnimatedTouchableOpacity 
-                  key={tool.id} 
-                  entering={animationsEnabled ? FadeInDown.delay((catIndex * 100) + (toolIndex * 50)).duration(400) : undefined}
-                  style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
-                  onPress={() => router.push(tool.route as any)}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.iconContainer, { backgroundColor: theme.background }]}>
-                    <Ionicons name={tool.icon} size={24} color={theme.primary} />
-                  </View>
-                  <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{tool.name}</Text>
-                  <Text style={[styles.cardDesc, { color: theme.textSecondary }]} numberOfLines={2}>
-                    {tool.description}
-                  </Text>
-                </AnimatedTouchableOpacity>
-              ))}
-            </View>
+            <TouchableOpacity 
+              style={styles.categoryHeader} 
+              onPress={() => toggleCategory(category)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.categoryTitle, { color: theme.textPrimary }]}>{category}</Text>
+              <Ionicons 
+                name={expandedCategories[category] ? 'chevron-up' : 'chevron-down'} 
+                size={24} 
+                color={theme.textSecondary} 
+              />
+            </TouchableOpacity>
+            
+            {expandedCategories[category] && (
+              <View style={styles.grid}>
+                {categoryTools.map((tool, toolIndex) => (
+                  <AnimatedTouchableOpacity 
+                    key={tool.id} 
+                    entering={animationsEnabled ? FadeInDown.delay(toolIndex * 50).duration(400) : undefined}
+                    style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
+                    onPress={() => router.push(tool.route as any)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[styles.iconContainer, { backgroundColor: theme.background }]}>
+                      <Ionicons name={tool.icon} size={24} color={theme.primary} />
+                    </View>
+                    <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{tool.name}</Text>
+                    <Text style={[styles.cardDesc, { color: theme.textSecondary }]} numberOfLines={2}>
+                      {tool.description}
+                    </Text>
+                  </AnimatedTouchableOpacity>
+                ))}
+              </View>
+            )}
           </Animated.View>
         );
       })}
@@ -100,10 +132,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.l,
     marginBottom: spacing.l,
   },
+  categoryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.m,
+  },
   categoryTitle: {
     fontSize: typography.sizes.l,
     fontWeight: typography.weights.bold,
-    marginBottom: spacing.m,
   },
   grid: {
     flexDirection: 'row',

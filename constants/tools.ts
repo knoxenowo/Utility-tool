@@ -145,7 +145,7 @@ export const TOOLS: Tool[] = [
     name: 'Random Generator',
     description: 'Numbers, dice rolls, coin flips',
     icon: 'shuffle-outline',
-    category: 'Tools',
+    category: 'Quick Utilities',
     route: '/tool/random-generator',
   },
   {
@@ -185,7 +185,7 @@ export const TOOLS: Tool[] = [
     name: 'Color Picker',
     description: 'Find HEX, RGB, and HSL codes',
     icon: 'color-palette-outline',
-    category: 'Tools',
+    category: 'Quick Utilities',
     route: '/tool/color-picker',
   },
   {

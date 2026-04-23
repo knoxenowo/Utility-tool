@@ -70,6 +70,17 @@ export default function SettingsScreen() {
       >
         <TouchableOpacity 
           style={styles.row}
+          onPress={() => Linking.openURL('https://github.com/knoxenowo/Utility-tool')}
+        >
+          <View style={styles.rowLeft}>
+            <Ionicons name="logo-github" size={24} color={theme.primary} />
+            <Text style={[styles.label, { color: theme.textPrimary }]}>GitHub Repository</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+        </TouchableOpacity>
+        <View style={[styles.divider, { backgroundColor: theme.border }]} />
+        <TouchableOpacity 
+          style={styles.row}
           onPress={() => Linking.openURL('https://ko-fi.com/knoxen')}
         >
           <View style={styles.rowLeft}>
