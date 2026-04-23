@@ -37,7 +37,8 @@ To build the project locally, ensure you have the following installed on your sy
 - **[Xcode](https://developer.apple.com/xcode/) & CocoaPods** (Required for compiling iOS, macOS only)
 
 ### Build Steps
-
+0. **Clone the repo**
+   ```git clone https://github.com/knoxenowo/Utility-tool.git```
 1. **Install Dependencies**
    Navigate to the project root and install the required Node modules:
    ```bash
