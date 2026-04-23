@@ -14,10 +14,11 @@ Utility Hub is a comprehensive, privacy-first mobile toolkit designed to bring e
 
 Utility Hub includes a versatile collection of tools categorized for your convenience:
 
-- **Quick Utilities**: Unit Converter, QR Code Generator, Password Generator, Text Encoder/Decoder, File Batch Renamer, Encryption Tool.
-- **Productivity**: Daily Planner, Quick Notes.
-- **Images**: Image Compressor, Background Eraser, Passport Photo Maker, Color Picker, Image Resizer.
-- **Documents**: Document Scanner, PDF Compressor, Image to Text (OCR).
+- **Quick Utilities**: Unit Converter, Currency Converter, Decision Wheel, Random Generator, Color Picker
+- **Productivity**: Daily Planner, Quick Notes., Countdown Timer, To-Do List
+- **Images**: Image Compressor, Background Eraser, Passport Photo Maker, Image Resizer, EXIF Metadata Viewer
+- **Documents**: Document Scanner, PDF Compressor, Image to Text (OCR), Text-to-Speech
+- **Tools**: Text Encoder/Decoder, File Batch Renamer, Encryption Tool, QR Generator, Password Generator, Hash Generator, Base Converter.
 
 *Note: While the vast majority of tools operate 100% offline, specific advanced AI features (like Background Eraser, OCR, and PDF Compressor) securely connect to trusted third-party APIs (Remove.bg, OCR.space, ConvertAPI) using your own API keys. No personal data is tracked or retained.*
 
